@@ -5,7 +5,7 @@ import argparse
 
 from support_functions import open_file, write_file, progressbar,\
     prepare_matches_to_output, print_to_console
-from morph import normalize_word
+from morph import normalize_word, remove_punctuation
 
 
 def find_word(lines, word_to_find, verbose=True):
@@ -23,12 +23,12 @@ def find_word(lines, word_to_find, verbose=True):
     normalized_word_to_find = normalize_word(word_to_find)
     for line_idx, line_content in enumerate(lines):
         split_line = line_content.strip().split()
-        normalized_line = ["".join(symbol for symbol in word if symbol.isalpha()) for word in split_line]
+        normalized_line = [remove_punctuation(word) for word in split_line]
         for word_idx, word in enumerate(normalized_line):
             if word:
                 normalized_word_from_line = normalize_word(word)
                 if normalized_word_from_line == normalized_word_to_find:
-                    matches.append(("".join(symbol for symbol in split_line[word_idx] if symbol.isalpha()), word_idx, line_idx))
+                    matches.append((remove_punctuation(split_line[word_idx]), word_idx, line_idx))
         if verbose:
             progressbar(line_idx + 1, document_length, label="Progress of text analysis")
     return matches

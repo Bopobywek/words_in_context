@@ -4,7 +4,7 @@ import os
 
 COMMON_LEN_IDX = 4
 MAX_LINE_LENGTH = 10
-TEMPLATE = "Found word \"{}\" in {} line. In following context: \"{}\""
+TEMPLATE = "Found word \"{}\" in {} line. In following context: \"...{}...\""
 
 
 def open_file(filename, encoding="utf-8"):
@@ -33,18 +33,20 @@ def write_file(content, filename, encoding="utf-8"):
 
 
 def prepare_matches_to_output(matches, lines, amount_of_strings=None):
-    result = []
+    matches_length_before = len(matches)
+    result = ["Found {} matches".format(matches_length_before)]
     matches = matches if not amount_of_strings else matches[:amount_of_strings]
+    result.append("Printed {} matches".format(len(matches)))
     for word, word_idx, line_idx in matches:
         original_line = lines[line_idx]
         if word_idx <= 2 and line_idx == 0:
-            string = TEMPLATE.format(original_line.split()[word_idx], line_idx + 1, original_line)
+            string = TEMPLATE.format(word, line_idx + 1, original_line)
         elif word_idx <= 2 and line_idx != 0:
             previous_line = lines[line_idx - 1]
-            string = TEMPLATE.format(original_line.split()[word_idx], line_idx + 1,
-                                     "..." + " ".join(previous_line.split()[-2:]) + " " + " ".join(original_line.split()[:word_idx + 2]) + "...")
+            string = TEMPLATE.format(word, line_idx + 1, " ".join(previous_line.split()[-2:]) +
+                                     " " + " ".join(original_line.split()[:word_idx + 2]))
         else:
-            string = TEMPLATE.format(original_line.split()[word_idx], line_idx + 1, " ".join(original_line.split()[word_idx - 2: word_idx + 2]))
+            string = TEMPLATE.format(word, line_idx + 1, " ".join(original_line.split()[word_idx - 2: word_idx + 2]))
         result.append(string)
     return result
 
