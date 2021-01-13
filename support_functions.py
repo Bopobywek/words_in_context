@@ -4,6 +4,7 @@ import os
 
 COMMON_LEN_IDX = 4
 MAX_LINE_LENGTH = 10
+TEMPLATE = "Found word \"{}\" in {} line. In following context: \"{}\""
 
 
 def open_file(filename, encoding="utf-8"):
@@ -25,13 +26,27 @@ def open_file(filename, encoding="utf-8"):
 def write_file(content, filename, encoding="utf-8"):
     try:
         with open(filename, encoding=encoding, mode="w") as file_out:
-            file_out.write(content)
+            for element in content:
+                file_out.write("{}\n".format(element))
     except UnicodeError:
         print("Error! Cannot write file")
 
 
-def prepare_matches_to_output(matches, amount_of_strings=None):
-    pass
+def prepare_matches_to_output(matches, lines, amount_of_strings=None):
+    result = []
+    matches = matches if not amount_of_strings else matches[:amount_of_strings]
+    for word, word_idx, line_idx in matches:
+        original_line = lines[line_idx]
+        if word_idx <= 2 and line_idx == 0:
+            string = TEMPLATE.format(original_line.split()[word_idx], line_idx + 1, original_line)
+        elif word_idx <= 2 and line_idx != 0:
+            previous_line = lines[line_idx - 1]
+            string = TEMPLATE.format(original_line.split()[word_idx], line_idx + 1,
+                                     "..." + " ".join(previous_line.split()[-2:]) + " " + " ".join(original_line.split()[:word_idx + 2]) + "...")
+        else:
+            string = TEMPLATE.format(original_line.split()[word_idx], line_idx + 1, " ".join(original_line.split()[word_idx - 2: word_idx + 2]))
+        result.append(string)
+    return result
 
 
 def print_to_console(content):

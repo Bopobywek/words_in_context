@@ -18,22 +18,19 @@ def find_word(lines, word_to_find, verbose=True):
      (match, index of match in the line, index of line)
     """
 
+    document_length = len(lines)
     matches = []
     normalized_word_to_find = normalize_word(word_to_find)
-    text_length = len(lines)
     for line_idx, line_content in enumerate(lines):
-
-        normalized_words = []
-        for word_idx, word in enumerate(line_content):
-            normalized_word = normalize_word(word)
+        split_line = line_content.strip().split()
+        normalized_line = ["".join(symbol for symbol in word if symbol.isalpha()) for word in split_line]
+        for word_idx, word in enumerate(normalized_line):
             if word:
-                normalized_word.append((word_idx, normalized_words))
-        for word_idx, word in normalized_words:
-            if word == normalized_word_to_find:
-                matches.append((line_content[word_idx], word_idx, line_idx))
+                normalized_word_from_line = normalize_word(word)
+                if normalized_word_from_line == normalized_word_to_find:
+                    matches.append(("".join(symbol for symbol in split_line[word_idx] if symbol.isalpha()), word_idx, line_idx))
         if verbose:
-            progressbar(line_idx + 1, text_length, label="Progress of text analysis")
-
+            progressbar(line_idx + 1, document_length, label="Progress of text analysis")
     return matches
 
 
@@ -52,12 +49,14 @@ def main():
                         help="Path to output file. If not specified, the utility prints output to the stdout")
     parser.add_argument('-n', action="store", dest="amount_of_strings",
                         default=10, type=int, help="Amount of strings to output")
+    parser.add_argument('--fast', action="store", dest="amount_of_strings",
+                        default=10, type=int, help="Amount of strings to output")
 
     args = parser.parse_args()
 
     lines = open_file(filename=args.file_in)
     matches = find_word(lines, args.word_to_find)
-    result = prepare_matches_to_output(matches, args.amount_of_strings)
+    result = prepare_matches_to_output(matches, lines, args.amount_of_strings)
     if args.file_out:
         write_file(result, args.file_out, args.encoding)
     else:
