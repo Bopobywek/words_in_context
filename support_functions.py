@@ -34,7 +34,7 @@ def write_file(content, filename, encoding="utf-8"):
 
 
 def prepare_matches_to_output(matches, lines, amount_of_strings=None):
-    
+
     """
     This function prepares list with lines to output.
     :param matches:
