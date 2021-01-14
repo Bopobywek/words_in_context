@@ -49,8 +49,6 @@ def main():
                         help="Path to output file. If not specified, the utility prints output to the stdout")
     parser.add_argument('-n', action="store", dest="amount_of_strings",
                         default=10, type=int, help="Amount of strings to output")
-    parser.add_argument('--fast', action="store", dest="amount_of_strings",
-                        default=10, type=int, help="Amount of strings to output")
 
     args = parser.parse_args()
 
