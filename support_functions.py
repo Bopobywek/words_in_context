@@ -13,14 +13,12 @@ def open_file(filename, encoding="utf-8"):
         try:
             with open(filename, encoding=file_encoding) as fin:
                 text_document_lines = fin.readlines()
-        except UnicodeError:
-            print("Invalid encoding. Please, specify encoding with -enc parameter")
-            sys.exit(0)
+        except UnicodeDecodeError:
+            raise UnicodeDecodeError("Invalid encoding. Please, specify encoding with -enc parameter")
         else:
             return text_document_lines
     else:
-        print("Wrong path to file. Not found")
-        sys.exit(0)
+        raise ValueError("Wrong path to file. Not found")
 
 
 def write_file(content, filename, encoding="utf-8"):
@@ -28,8 +26,8 @@ def write_file(content, filename, encoding="utf-8"):
         with open(filename, encoding=encoding, mode="w") as file_out:
             for element in content:
                 file_out.write("{}\n".format(element))
-    except UnicodeError:
-        print("Error! Cannot write file")
+    except Exception as e:
+        raise IOError("Error! Cannot write file")
 
 
 def prepare_matches_to_output(matches, lines, amount_of_strings=None):

@@ -4,12 +4,12 @@ from pymorphy2 import MorphAnalyzer
 morph_analyzer = MorphAnalyzer()
 
 
-def remove_punctuation(word):
+def remove_punctuation_from_word(word):
     return "".join([symbol for symbol in word if symbol.isalpha()])
 
 
 def normalize_word(word):
-    word = remove_punctuation(word)
+    word = remove_punctuation_from_word(word)
     if not word:
         return ""
     variants = morph_analyzer.parse(word)
