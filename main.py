@@ -11,6 +11,8 @@ from morph import normalize_word, remove_punctuation_from_word
 def find_word(lines, word_to_find, verbose=True):
 
     """
+    This function find word in text and returns matches with specified format
+    
     :param lines: list
     :param word_to_find: str
     :param verbose: bool

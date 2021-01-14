@@ -34,6 +34,15 @@ def write_file(content, filename, encoding="utf-8"):
 
 
 def prepare_matches_to_output(matches, lines, amount_of_strings=None):
+    
+    """
+    This function prepares list with lines to output.
+    :param matches:
+    :param lines:
+    :param amount_of_strings:
+    :return: strings to output
+    """
+
     matches_length_before = len(matches)
     result = ["Found {} matches".format(matches_length_before)]
     matches = matches if not amount_of_strings else matches[:amount_of_strings]
