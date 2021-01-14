@@ -26,6 +26,5 @@ class MorphTest(unittest.TestCase):
         self.assertEqual(normalize_word("двух"), "два")
 
 
-
 if __name__ == '__main__':
     unittest.main()
